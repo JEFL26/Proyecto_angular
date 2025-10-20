@@ -1,0 +1,21 @@
+# Dependencias locales
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Configuración local
+.vscode
+.angular
+.editorconfig
+
+# Archivos de entorno
+.env
+.env.example
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Salidas de compilación
+dist
+coverage

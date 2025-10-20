@@ -1,0 +1,272 @@
+<div class="admin-container">
+  <div class="header-section">
+    <h2>Gestión de Servicios</h2>
+    <button class="btn-primary" (click)="createService()">
+      <span class="icon">+</span> Crear nuevo servicio
+    </button>
+  </div>
+
+  <!-- Sección de carga Excel -->
+  <div class="upload-section">
+    <div class="upload-header">
+      <h3>📊 Carga Masiva desde Excel</h3>
+      <p class="hint">Formatos: .xls, .xlsx | Máximo: 5 archivos de 5MB c/u</p>
+    </div>
+
+    
+    <!-- Input de archivos -->
+    <div class="file-input-container">
+      <label for="file-input" class="file-label">
+        <span class="icon">📁</span>
+        Seleccionar archivos
+      </label>
+      <input 
+        id="file-input"
+        type="file" 
+        (change)="onFileSelected($event)" 
+        accept=".xls,.xlsx" 
+        multiple
+        [disabled]="uploading"
+      />
+    </div>
+    <!-- Formato del archivo Excel -->
+    <div class="excel-format-card">
+      <h4>📘 Formato del archivo Excel</h4>
+      <p>El archivo debe incluir las siguientes columnas, en este orden:</p>
+      <ul>
+        <li><strong>name</strong> (columna A)</li>
+        <li><strong>description</strong> (columna B)</li>
+        <li><strong>duration_minutes</strong> (columna C)</li>
+        <li><strong>price</strong> (columna D)</li>
+        <li><strong>state</strong> (columna E)</li>
+      </ul>
+      <div class="excel-sample">
+        <table>
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>description</th>
+              <th>duration_minutes</th>
+              <th>price</th>
+              <th>state</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>terro</td>
+              <td>soles</td>
+              <td>30</td>
+              <td>15</td>
+              <td>TRUE</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Lista de archivos seleccionados -->
+    <div class="selected-files" *ngIf="selectedFiles.length > 0">
+      <div class="files-header">
+        <h4>Archivos seleccionados ({{ selectedFiles.length }}/5)</h4>
+        <button 
+          class="btn-clear" 
+          (click)="clearAllFiles()"
+          [disabled]="uploading"
+        >
+          Limpiar todo
+        </button>
+      </div>
+      
+      <div class="file-list">
+        <div class="file-item" *ngFor="let item of selectedFiles">
+          <div class="file-info">
+            <span class="file-icon">📄</span>
+            <div class="file-details">
+              <span class="file-name">{{ item.file.name }}</span>
+              <span class="file-size">{{ getFileSize(item.file.size) }}</span>
+            </div>
+          </div>
+          <button 
+            class="btn-remove" 
+            (click)="removeFile(item.id)"
+            [disabled]="uploading"
+            title="Eliminar archivo"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Botón de subida -->
+      <button 
+        class="btn-upload" 
+        (click)="uploadFiles()" 
+        [disabled]="selectedFiles.length === 0 || uploading"
+      >
+        <span class="icon">{{ uploading ? '⏳' : '⬆️' }}</span>
+        {{ uploading ? 'Subiendo...' : 'Subir archivos' }}
+      </button>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-section" *ngIf="uploading || progress === 100">
+      <div class="progress-label">
+        <span>Progreso de carga</span>
+        <span class="progress-percent">{{ progress }}%</span>
+      </div>
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="progress"></div>
+      </div>
+    </div>
+
+    <!-- Resultados de la carga -->
+    <div class="upload-results" *ngIf="uploadResult">
+      <div class="results-header">
+        <h4>✓ Resultados de la Carga</h4>
+        <button class="btn-clear" (click)="clearAllFiles()">
+          Limpiar resultados
+        </button>
+      </div>
+
+      <!-- Resumen global -->
+      <div class="summary-card">
+        <div class="summary-item">
+          <span class="label">Total archivos:</span>
+          <span class="value">{{ uploadResult.summary.total_files }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Registros procesados:</span>
+          <span class="value">{{ uploadResult.summary.total_processed }}</span>
+        </div>
+        <div class="summary-stats">
+          <div class="stat success">
+            <span class="stat-icon">✓</span>
+            <span class="stat-value">{{ uploadResult.summary.completed }}</span>
+            <span class="stat-label">Completados</span>
+          </div>
+          <div class="stat warning">
+            <span class="stat-icon">⊘</span>
+            <span class="stat-value">{{ uploadResult.summary.skipped }}</span>
+            <span class="stat-label">Omitidos</span>
+          </div>
+          <div class="stat error">
+            <span class="stat-icon">✕</span>
+            <span class="stat-value">{{ uploadResult.summary.failed }}</span>
+            <span class="stat-label">Fallidos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detalle por archivo -->
+      <div class="file-results">
+        <h5>Detalle por archivo</h5>
+        <div class="file-result-card" *ngFor="let detail of uploadResult.details">
+          <div class="file-result-header">
+            <span class="filename">📄 {{ detail.filename }}</span>
+            <span class="success-rate" [class.low]="getSuccessRate(detail) < 50">
+              {{ getSuccessRate(detail) }}% éxito
+            </span>
+          </div>
+          
+          <div class="file-result-stats">
+            <span class="stat-item success">✓ {{ detail.completed }}</span>
+            <span class="stat-item warning">⊘ {{ detail.skipped }}</span>
+            <span class="stat-item error">✕ {{ detail.failed }}</span>
+          </div>
+
+          <!-- Barra de progreso por archivo -->
+          <div class="file-progress-bar">
+            <div 
+              class="bar completed" 
+              [style.width.%]="(detail.completed / detail.total * 100)"
+              [title]="'Completados: ' + detail.completed"
+            ></div>
+            <div 
+              class="bar skipped" 
+              [style.width.%]="(detail.skipped / detail.total * 100)"
+              [title]="'Omitidos: ' + detail.skipped"
+            ></div>
+            <div 
+              class="bar failed" 
+              [style.width.%]="(detail.failed / detail.total * 100)"
+              [title]="'Fallidos: ' + detail.failed"
+            ></div>
+          </div>
+
+          <!-- Mostrar errores si existen -->
+          <div class="errors-section" *ngIf="detail.errors && detail.errors.length > 0">
+            <details>
+              <summary>Ver errores ({{ detail.errors.length }})</summary>
+              <ul class="error-list">
+                <li *ngFor="let error of detail.errors">{{ error }}</li>
+              </ul>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div class="error-message" *ngIf="error">
+      <span class="error-icon">⚠️</span>
+      {{ error }}
+    </div>
+  </div>
+
+  <!-- Tabla de servicios -->
+  <div class="services-section">
+    <h3>Servicios Registrados</h3>
+    
+    <div *ngIf="loading" class="loading-spinner">
+      <div class="spinner"></div>
+      <span>Cargando servicios...</span>
+    </div>
+
+    <table *ngIf="!loading && services.length > 0" class="service-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Duración</th>
+          <th>Precio</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of services">
+          <td>{{ s.id_service }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.duration_minutes }} min</td>
+          <td>{{ s.price | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+          <td>
+            <span class="badge" [class.active]="s.state" [class.inactive]="!s.state">
+              {{ s.state ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn-edit" (click)="editService(s.id_service!)" title="Editar">
+              ✏️
+            </button>
+            <button class="btn-delete" (click)="deleteService(s.id_service!)" title="Eliminar">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && services.length === 0" class="empty-state">
+      <span class="empty-icon">📋</span>
+      <p>No hay servicios registrados</p>
+      <button class="btn-primary" (click)="createService()">Crear primer servicio</button>
+    </div>
+  </div>
+
+  <!-- Botón volver -->
+  <div class="footer-actions">
+    <button type="button" class="btn-back" (click)="back()">
+      ← Volver al panel
+    </button>
+  </div>
+</div>

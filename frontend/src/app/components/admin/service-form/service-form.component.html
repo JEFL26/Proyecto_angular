@@ -1,0 +1,54 @@
+<div class="admin-container">
+  <h2>{{ editMode ? 'Editar Servicio' : 'Nuevo Servicio' }}</h2>
+  <form (ngSubmit)="save()" #serviceForm="ngForm">
+    <label>Nombre</label>
+    <input
+      [(ngModel)]="service.name"
+      name="name"
+      placeholder="Ej: Corte de cabello"
+      required
+    />
+
+    <label>Descripción</label>
+    <textarea
+      [(ngModel)]="service.description"
+      name="description"
+      placeholder="Describe el servicio"
+    ></textarea>
+
+    <label>Duración (minutos)</label>
+    <input
+      type="number"
+      [(ngModel)]="service.duration_minutes"
+      name="duration_minutes"
+      placeholder="Ej: 60"
+      required
+      min="1"
+      step="1"
+    />
+
+    <label>Precio</label>
+    <input
+      type="number"
+      [(ngModel)]="service.price"
+      name="price"
+      placeholder="Ej: 50000"
+      required
+      min="0"
+      step="1"
+    />
+
+    <label>Estado</label>
+    <select [(ngModel)]="service.state" name="state">
+      <option [value]="true">Activo</option>
+      <option [value]="false">Inactivo</option>
+    </select>
+
+    <div class="actions">
+      <button type="submit" [disabled]="!serviceForm.valid">
+        {{ editMode ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button type="button" (click)="cancel()">Cancelar</button>
+    </div>
+  </form>
+</div>

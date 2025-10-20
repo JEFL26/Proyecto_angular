@@ -1,0 +1,156 @@
+<!-- frontend/src/app/components/home/home.component.html -->
+<div class="home-container">
+  <!-- Header/Navbar -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <div class="logo">
+        <span class="logo-icon">💅</span>
+        <h2>Centro de Belleza</h2>
+      </div>
+      <div class="nav-actions">
+        <button *ngIf="!isAuthenticated" class="btn btn-outline" (click)="goToLogin()">
+          Iniciar Sesión
+        </button>
+        <button *ngIf="!isAuthenticated" class="btn btn-primary" (click)="goToRegister()">
+          Registrarse
+        </button>
+        <button *ngIf="isAuthenticated" class="btn btn-danger" (click)="logout()">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Bienvenido a tu Centro de Belleza</h1>
+      <p class="hero-subtitle">Reserva tus servicios de belleza en línea</p>
+      <div class="hero-buttons" *ngIf="!isAuthenticated">
+        <button class="btn btn-large btn-primary" (click)="goToRegister()">
+          Comienza Ahora
+        </button>
+        <button class="btn btn-large btn-primary" (click)="goToLogin()">
+          Ya tengo cuenta
+        </button>
+      </div>
+      <div class="hero-buttons" *ngIf="isAuthenticated">
+        <button class="btn btn-large btn-primary">
+          Mis Reservas
+        </button>
+        <button class="btn btn-large btn-outline-white">
+          Nuevo Servicio
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="services-section">
+    <div class="section-header">
+      <h2>Nuestros Servicios</h2>
+      <p>Ofrecemos una amplia variedad de tratamientos de belleza</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon"></div>
+        <h3>Peluquería</h3>
+        <p>Cortes, peinados y tratamientos capilares profesionales</p>
+        <button class="btn btn-sm btn-outline">Ver más</button>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"></div>
+        <h3>Manicura y Pedicura</h3>
+        <p>Cuidado completo de manos y pies con los mejores productos</p>
+        <button class="btn btn-sm btn-outline">Ver más</button>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"></div>
+        <h3>Tratamientos Faciales</h3>
+        <p>Limpieza, hidratación y rejuvenecimiento facial</p>
+        <button class="btn btn-sm btn-outline">Ver más</button>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"></div>
+        <h3>Masajes</h3>
+        <p>Relajación y bienestar con masajes terapéuticos</p>
+        <button class="btn btn-sm btn-outline">Ver más</button>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"></div>
+        <h3>Depilación</h3>
+        <p>Servicios de depilación con técnicas modernas</p>
+        <button class="btn btn-sm btn-outline">Ver más</button>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"></div>
+        <h3>Maquillaje</h3>
+        <p>Maquillaje profesional para eventos especiales</p>
+        <button class="btn btn-sm btn-outline">Ver más</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works Section -->
+  <section class="how-it-works">
+    <div class="section-header">
+      <h2>¿Cómo funciona?</h2>
+      <p>Reservar es muy sencillo</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>Regístrate</h3>
+        <p>Crea tu cuenta en segundos</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Elige tu servicio</h3>
+        <p>Selecciona el tratamiento que deseas</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Reserva tu cita</h3>
+        <p>Escoge fecha y hora disponible</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <h3>¡Disfruta!</h3>
+        <p>Asiste a tu cita y relájate</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Centro de Belleza</h3>
+        <p>Tu bienestar es nuestra prioridad</p>
+      </div>
+      <div class="footer-section">
+        <h4>Contacto</h4>
+        <p>📞 (123) 456-7890</p>
+        <p>📧 info@centrobelleza.com</p>
+      </div>
+      <div class="footer-section">
+        <h4>Horario</h4>
+        <p>Lun - Vie: 9:00 - 20:00</p>
+        <p>Sáb: 10:00 - 18:00</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Centro de Belleza. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</div>

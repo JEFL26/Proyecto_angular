@@ -1,0 +1,16 @@
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <h3>Panel Admin</h3>
+    <nav>
+      <ul>
+        <li><a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a></li>
+        <li><a routerLink="/admin/services" routerLinkActive="active">Servicios</a></li>
+      </ul>
+    </nav>
+    <button (click)="logout()">Cerrar sesión</button>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

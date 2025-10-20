@@ -1,0 +1,50 @@
+# Entorno
+.env
+.venv/
+__pycache__/
+*.py[cod]
+
+# Compilación
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Archivos generados por Angular
+/.angular/cache
+/.angular/cli.json
+/angular.json
+/dist/
+/.tmp/
+/out-tsc/
+coverage/
+
+# IDEs y editores
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+*.swp
+*.swo
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de prueba
+/tests/
+*.log

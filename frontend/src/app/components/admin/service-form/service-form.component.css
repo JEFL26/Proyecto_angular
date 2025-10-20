@@ -1,0 +1,100 @@
+/* Contenedor general */
+.admin-container {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.admin-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* Formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+label {
+  font-weight: 500;
+  color: #555;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #667eea;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Acciones */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+button[type='submit'] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+button[type='submit']:hover {
+  background: linear-gradient(135deg, #5a6fe0 0%, #6b3f9c 100%);
+}
+
+button[type='button'] {
+  background: #e0e0e0;
+  color: #333;
+}
+
+button[type='button']:hover {
+  background: #d5d5d5;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .admin-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

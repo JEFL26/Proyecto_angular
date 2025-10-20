@@ -1,0 +1,173 @@
+/* frontend/src/app/components/login/login.component.css */
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f4f6f8;
+  padding: 20px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 380px;
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.login-card {
+  background: #fff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.logo-circle {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.login-header h1 {
+  font-size: 22px;
+  margin: 0;
+  color: #333;
+}
+
+.login-header p {
+  font-size: 14px;
+  color: #777;
+  margin-top: 5px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  background: #fdecea;
+  color: #b71c1c;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.alert-icon {
+  margin-right: 6px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.form-input:disabled {
+  background: #f0f0f0;
+}
+
+.form-footer {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.forgot-password {
+  font-size: 13px;
+  color: #4f46e5;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.btn-primary:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #4f46e5;
+  color: #4f46e5;
+}
+
+.btn-outline:hover {
+  background: #eef2ff;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  font-size: 13px;
+  color: #999;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #ddd;
+  margin: 0 10px;
+}
+
+.register-section {
+  text-align: center;
+}
+
+.register-text {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 10px;
+}

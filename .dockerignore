@@ -1,0 +1,28 @@
+# Archivos y carpetas generales
+.git
+.gitignore
+.vscode
+.angular
+.editorconfig
+.env
+.env.example
+README.md
+
+# Dependencias y builds
+node_modules
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Salidas de compilación
+frontend/dist
+frontend/node_modules
+backend/__pycache__
+backend/.pytest_cache

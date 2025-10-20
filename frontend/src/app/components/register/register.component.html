@@ -1,0 +1,69 @@
+<!-- frontend/src/app/components/register/register.component.html -->
+<div class="register-page">
+  <div class="register-container">
+    <!-- Botón volver -->
+    <button class="back-button" (click)="goToHome()">
+      ← Volver al inicio
+    </button>
+
+    <div class="register-card">
+      <!-- Header -->
+      <div class="register-header">
+        <div class="logo-circle">
+          <span class="logo-icon">✨</span>
+        </div>
+        <h1>Crear Cuenta</h1>
+        <p>Únete a nosotros y disfruta de nuestros servicios</p>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="alert alert-error">
+        <span class="alert-icon">⚠️</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Mensaje de éxito -->
+      <div *ngIf="successMessage" class="alert alert-success">
+        <span class="alert-icon">✅</span>
+        <span>{{ successMessage }}</span>
+      </div>
+
+      <!-- Formulario -->
+      <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="register-form">
+        <!-- Campo Email -->
+        <div class="form-group">
+          <label for="email">
+            <span class="label-icon">📧</span>
+            Correo Electrónico
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="registerData.email"
+            placeholder="tu@email.com"
+            required
+            email
+            [disabled]="loading"
+            class="form-input"
+          />
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div class="form-group">
+          <label for="password">
+            <span class="label-icon">🔒</span>
+            Contraseña
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="registerData.password"
+            placeholder="Mínimo 6 caracteres"
+            required
+            minlength="6"
+            [disabled]="loading"
+            class="form-input"
+          />
+          <small class="input-hint">Debe contener al menos

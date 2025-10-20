@@ -1,0 +1,74 @@
+services:
+  reservas_mysql:
+    image: mysql:8.0
+    container_name: reservas_mysql
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - reservas_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  reservas_backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: reservas_backend
+    image: reservas_backend:1.0
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      reservas_mysql:
+        condition: service_healthy
+    networks:
+      - reservas_net
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/docs\")'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  reservas_frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: reservas_frontend
+    image: reservas_frontend:1.0
+    restart: always
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      reservas_backend:
+        condition: service_healthy
+    networks:
+      - reservas_net
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4200"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  reservas_net:
+    driver: bridge

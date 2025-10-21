@@ -7,3 +7,8 @@ y si les añado validaciones segun cada usuario seran mejor aun.
 integrarla mejor con bootstrap. 
 - Añadir los endpoints para hacer las reservaciones, gestionar las reservaciones, y que los clientes
 vean las reservaciones.
+- Me falta hacer mas compatible la idea del centro de belleza ficticio con el front
+- Si se puede seria bueno ver el tema de las cookies y los tokens en profundidad, tuve un error 
+mientras levantaba y bajaba los contenedores y esta es la situacion: Levante los contenedores inicie sesion como admin,
+baje los contenedores, volvi a construir las imagenes y los contenedores y me meti al mismo enlace de admin, y la sesion ya estaba iniciada.
+A lo mejor yo no entiendo bien el tema y solo tenga que ver con las cookies o demas cosas que almacena el navegador.

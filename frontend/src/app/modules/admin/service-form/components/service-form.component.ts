@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ServiceService, Service } from '../../../services/service.service';
+import { ServiceService, Service } from './../../../../services/service.service';
 
 @Component({
   selector: 'app-service-form',

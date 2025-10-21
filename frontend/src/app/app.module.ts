@@ -8,16 +8,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 // Importar componentes
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { HomeComponent } from './modules/home/components/home.component';
+import { LoginComponent } from './modules/login/components/login.component';
+import { RegisterComponent } from './modules/register/components/register.component';
 
 // Importar servicios y guards
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './guards/auth.guard';
-import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
-import { ServicesComponent } from './components/admin/services/services.component';
-import { ServiceFormComponent } from './components/admin/service-form/service-form.component';
+import { DashboardComponent } from './modules/admin/dashboard/components/dashboard.component';
+import { ServicesComponent } from './modules/admin/services/components/services.component';
+import { ServiceFormComponent } from './modules/admin/service-form/components/service-form.component';
 
 /**
  * Módulo principal de la aplicación

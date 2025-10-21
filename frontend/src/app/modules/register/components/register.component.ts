@@ -1,8 +1,8 @@
 // frontend/src/app/components/register/register.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { UserRegister } from '../../models/user.model';
+import { AuthService } from '../../../services/auth.service';
+import { UserRegister } from '../../../models/user.model';
 
 @Component({
   selector: 'app-register',

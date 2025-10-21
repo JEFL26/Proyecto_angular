@@ -1,12 +1,12 @@
 // frontend/src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
-import { ServicesComponent } from './components/admin/services/services.component';
-import { ServiceFormComponent } from './components/admin/service-form/service-form.component';
+import { HomeComponent } from './modules/home/components/home.component';
+import { LoginComponent } from './modules/login/components/login.component';
+import { RegisterComponent } from './modules/register/components/register.component';
+import { DashboardComponent } from './modules/admin/dashboard/components/dashboard.component';
+import { ServicesComponent } from './modules/admin/services/components/services.component';
+import { ServiceFormComponent } from './modules/admin/service-form/components/service-form.component';
 import { AuthGuard } from './guards/auth.guard';
 
 /**

@@ -1,7 +1,7 @@
-// frontend/src/app/components/home/home.component.ts
+// frontend/src/app/modules/home/home.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-home',

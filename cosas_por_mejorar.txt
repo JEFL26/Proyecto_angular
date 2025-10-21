@@ -2,9 +2,10 @@ Mejorias:
 
 - Hacer los componentes para tener un footer y un header reutilizable. Sera lo mejor para la aplicacion
 y si les añado validaciones segun cada usuario seran mejor aun.
+-Solo he creado un crud perteneciente a un modulo, faltan añadir mas opciones para el dashboard del admin
 - Hacer validaciones en distintos campos de los formularios que llevo usando en el sistema.
 - Ver la posibilidad de mejorar mis cruds con la libreria de datatable para js o buscar una forma de
-integrarla mejor con bootstrap. 
+integrarla mejor con bootstrap. Lo digo porque mis tablas son muy feas.
 - Añadir los endpoints para hacer las reservaciones, gestionar las reservaciones, y que los clientes
 vean las reservaciones.
 - Me falta hacer mas compatible la idea del centro de belleza ficticio con el front

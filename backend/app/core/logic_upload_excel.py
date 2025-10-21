@@ -3,6 +3,7 @@ from ..database import get_conn
 import pandas as pd
 import time
 from typing import Dict, Any
+import logging
 
 EXPECTED_COLUMNS = {"name", "description", "duration_minutes", "price", "state"}
 
@@ -92,11 +93,15 @@ def process_excel(file_content: bytes, filename: str, start_time: float, max_tim
             except ValueError as ve:
                 conn.rollback()
                 results["failed"] += 1
-                results["errors"].append(f"Fila {row_num}: {str(ve)}")
+                error_msg = f"Fila {row_num}: {str(ve)}"
+                results["errors"].append(error_msg)
+                logging.error(error_msg)
             except Exception as e:
                 conn.rollback()
                 results["failed"] += 1
-                results["errors"].append(f"Fila {row_num}: error al insertar")
+                error_msg = f"Fila {row_num}: error al insertar"
+                results["errors"].append(error_msg)
+                logging.error(f"{error_msg}: {str(e)}")
 
             # Control de timeout
             if time.time() - start_time > max_time:

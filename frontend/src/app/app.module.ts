@@ -18,6 +18,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { DashboardComponent } from './modules/admin/dashboard/components/dashboard.component';
 import { ServicesComponent } from './modules/admin/services/components/services.component';
 import { ServiceFormComponent } from './modules/admin/service-form/components/service-form.component';
+import { ReservationsComponent } from './modules/admin/reservations/components/reservations.component';
 
 /**
  * Módulo principal de la aplicación
@@ -35,7 +36,8 @@ import { ServiceFormComponent } from './modules/admin/service-form/components/se
     RegisterComponent,
     DashboardComponent,
     ServicesComponent,
-    ServiceFormComponent
+    ServiceFormComponent,
+    ReservationsComponent
   ],
   imports: [
     BrowserModule,           // Módulo esencial para apps de navegador

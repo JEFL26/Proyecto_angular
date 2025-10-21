@@ -1,6 +1,7 @@
 # Entorno
 .env
 .venv/
+backend/venv/
 __pycache__/
 *.py[cod]
 

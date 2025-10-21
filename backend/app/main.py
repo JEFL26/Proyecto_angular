@@ -1,11 +1,11 @@
 # backend/app/main.py
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer
-from fastapi.openapi.models import APIKey, APIKeyIn
 from fastapi.openapi.utils import get_openapi
 from app.rutas import auth, service, upload_excel 
-from app.database import init_pool
+from app.database import init_pool, get_conn
+from mysql.connector import Error as MySQLError
+import logging
 
 app = FastAPI(
     title="Proyecto Reservas",
@@ -17,9 +17,13 @@ app = FastAPI(
     ]
 )
 
-# Seguridad global para Swagger
-app.openapi_schema = None
 def custom_openapi():
+    """
+    Personaliza el esquema OpenAPI para incluir autenticación JWT.
+
+    Returns:
+        dict: Esquema OpenAPI personalizado.
+    """
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
@@ -44,24 +48,61 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 # Configuración de CORS
-# Esto permite que el frontend (Angular) se comunique con el backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:4200"],  # URL del frontend Angular
     allow_credentials=True,
-    allow_methods=["*"],  # Permite todos los métodos (GET, POST, etc.)
-    allow_headers=["*"],  # Permite todos los headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-
+# Incluir routers
 app.include_router(auth.router)
 app.include_router(service.router)
 app.include_router(upload_excel.router)
 
 @app.on_event("startup")
-def startup():
-    init_pool()
+async def startup():
+    """
+    Inicializa el pool de conexiones a la base de datos al iniciar la aplicación.
+    """
+    try:
+        init_pool()
+    except Exception as e:
+        logging.error(f"Error al inicializar el pool de conexiones: {str(e)}")
 
 @app.get("/")
-def ping():
-    return {"msg": "ok"}
+async def ping():
+    """
+    Endpoint simple para verificar que la API está funcionando.
+
+    Returns:
+        dict: Mensaje de estado OK.
+    """
+    return {"msg": "API is running"}
+
+@app.get("/health")
+async def health_check():
+    """
+    Realiza una verificación de salud de la API y la conexión a la base de datos.
+
+    Returns:
+        dict: Estado de salud de la API y la base de datos.
+
+    Raises:
+        HTTPException: Si hay un problema con la conexión a la base de datos.
+    """
+    try:
+        with get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+        return {
+            "status": "healthy",
+            "api": "running",
+            "database": "connected"
+        }
+    except MySQLError as e:
+        raise HTTPException(status_code=500, detail=f"Database connection error: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")

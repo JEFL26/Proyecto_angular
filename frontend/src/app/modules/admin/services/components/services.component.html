@@ -9,7 +9,7 @@
   <!-- Sección de carga Excel -->
   <div class="upload-section">
     <div class="upload-header">
-      <h3>📊 Carga Masiva desde Excel</h3>
+      <h3>Carga Masiva desde Excel</h3>
       <p class="hint">Formatos: .xls, .xlsx | Máximo: 5 archivos de 5MB c/u</p>
     </div>
 
@@ -17,7 +17,7 @@
     <!-- Input de archivos -->
     <div class="file-input-container">
       <label for="file-input" class="file-label">
-        <span class="icon">📁</span>
+        <span class="icon"></span>
         Seleccionar archivos
       </label>
       <input 
@@ -31,7 +31,7 @@
     </div>
     <!-- Formato del archivo Excel -->
     <div class="excel-format-card">
-      <h4>📘 Formato del archivo Excel</h4>
+      <h4>Formato del archivo Excel</h4>
       <p>El archivo debe incluir las siguientes columnas, en este orden:</p>
       <ul>
         <li><strong>name</strong> (columna A)</li>
@@ -80,7 +80,7 @@
       <div class="file-list">
         <div class="file-item" *ngFor="let item of selectedFiles">
           <div class="file-info">
-            <span class="file-icon">📄</span>
+            <span class="file-icon"></span>
             <div class="file-details">
               <span class="file-name">{{ item.file.name }}</span>
               <span class="file-size">{{ getFileSize(item.file.size) }}</span>
@@ -246,10 +246,10 @@
           </td>
           <td class="actions">
             <button class="btn-edit" (click)="editService(s.id_service!)" title="Editar">
-              ✏️
+            editar
             </button>
             <button class="btn-delete" (click)="deleteService(s.id_service!)" title="Eliminar">
-              🗑️
+            eliminar
             </button>
           </td>
         </tr>
@@ -257,7 +257,7 @@
     </table>
 
     <div *ngIf="!loading && services.length === 0" class="empty-state">
-      <span class="empty-icon">📋</span>
+      <span class="empty-icon"></span>
       <p>No hay servicios registrados</p>
       <button class="btn-primary" (click)="createService()">Crear primer servicio</button>
     </div>

@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { UserRegister, UserLogin, AuthResponse, MessageResponse } from '../models/user.model';
+import { UserRegister, UserLogin, AuthResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // URL base de tu backend - CÁMBIALA según tu configuración
   private apiUrl = 'http://localhost:8000';
   
   // BehaviorSubject: mantiene el estado del login
@@ -26,12 +25,8 @@ export class AuthService {
     return !!localStorage.getItem('access_token');
   }
 
-  /**
-   * Registra un nuevo usuario
-   * POST a /auth/register
-   */
-  register(user: UserRegister): Observable<MessageResponse> {
-    return this.http.post<MessageResponse>(`${this.apiUrl}/auth/register`, user);
+  register(user: UserRegister): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, user);
   }
 
   /**

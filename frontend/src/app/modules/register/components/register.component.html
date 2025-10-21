@@ -1,11 +1,10 @@
-<!-- frontend/src/app/components/register/register.component.html -->
+<!-- frontend/src/app/modules/register/components/register.component.html -->
 <div class="register-page">
   <div class="register-container">
     <!-- Botón volver -->
     <button class="back-button" (click)="goToHome()">
       ← Volver al inicio
     </button>
-
     <div class="register-card">
       <!-- Header -->
       <div class="register-header">
@@ -15,19 +14,19 @@
         <h1>Crear Cuenta</h1>
         <p>Únete a nosotros y disfruta de nuestros servicios</p>
       </div>
-
+      
       <!-- Mensaje de error -->
       <div *ngIf="errorMessage" class="alert alert-error">
         <span class="alert-icon">⚠️</span>
         <span>{{ errorMessage }}</span>
       </div>
-
+      
       <!-- Mensaje de éxito -->
       <div *ngIf="successMessage" class="alert alert-success">
         <span class="alert-icon">✅</span>
         <span>{{ successMessage }}</span>
       </div>
-
+      
       <!-- Formulario -->
       <form (ngSubmit)="onRegister()" #registerForm="ngForm" class="register-form">
         <!-- Campo Email -->
@@ -48,7 +47,61 @@
             class="form-input"
           />
         </div>
-
+        
+        <!-- Campo Nombre -->
+        <div class="form-group">
+          <label for="first_name">
+            <span class="label-icon">👤</span>
+            Nombre
+          </label>
+          <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            [(ngModel)]="registerData.first_name"
+            placeholder="Tu nombre"
+            required
+            [disabled]="loading"
+            class="form-input"
+          />
+        </div>
+        
+        <!-- Campo Apellido -->
+        <div class="form-group">
+          <label for="last_name">
+            <span class="label-icon">👥</span>
+            Apellido
+          </label>
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            [(ngModel)]="registerData.last_name"
+            placeholder="Tu apellido"
+            required
+            [disabled]="loading"
+            class="form-input"
+          />
+        </div>
+        
+        <!-- Campo Teléfono -->
+        <div class="form-group">
+          <label for="phone">
+            <span class="label-icon">📞</span>
+            Teléfono
+          </label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            [(ngModel)]="registerData.phone"
+            placeholder="Tu número de teléfono"
+            required
+            [disabled]="loading"
+            class="form-input"
+          />
+        </div>
+        
         <!-- Campo Contraseña -->
         <div class="form-group">
           <label for="password">
@@ -66,4 +119,36 @@
             [disabled]="loading"
             class="form-input"
           />
-          <small class="input-hint">Debe contener al menos
+        </div>
+        
+        <!-- Campo Confirmar Contraseña -->
+        <div class="form-group">
+          <label for="confirmPassword">
+            <span class="label-icon">🔒</span>
+            Confirmar Contraseña
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            placeholder="Repite tu contraseña"
+            required
+            [disabled]="loading"
+            class="form-input"
+          />
+        </div>
+        
+        <!-- Botón de registro -->
+        <button type="submit" [disabled]="loading || !registerForm.form.valid" class="submit-button">
+          {{ loading ? 'Registrando...' : 'Registrarse' }}
+        </button>
+      </form>
+      
+      <!-- Link para ir al login -->
+      <p class="login-link">
+        ¿Ya tienes una cuenta? <a (click)="goToLogin()">Inicia sesión aquí</a>
+      </p>
+    </div>
+  </div>
+</div>

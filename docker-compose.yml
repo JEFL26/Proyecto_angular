@@ -13,7 +13,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - reservas_net
+      - centro_belleza_network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -35,7 +35,8 @@ services:
       reservas_mysql:
         condition: service_healthy
     networks:
-      - reservas_net
+      - centro_belleza_network
+      - default
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/health\")'"]
@@ -59,7 +60,8 @@ services:
       reservas_backend:
         condition: service_healthy
     networks:
-      - reservas_net
+      - centro_belleza_network
+      - default
     env_file:
       - .env
     healthcheck:
@@ -74,5 +76,5 @@ volumes:
     driver: local
 
 networks:
-  reservas_net:
-    driver: bridge
+  centro_belleza_network:
+    internal: true

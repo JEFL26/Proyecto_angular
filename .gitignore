@@ -23,6 +23,7 @@ yarn-error.log
 /.tmp/
 /out-tsc/
 coverage/
+frontend/.angular/cache
 
 # IDEs y editores
 .idea/

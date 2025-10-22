@@ -111,3 +111,161 @@ def authenticate_user(email: str, password: str) -> Optional[dict]:
     except Exception as e:
         logging.error(f"Error al autenticar usuario ({email}): {str(e)}")
         raise
+
+
+def get_all_users() -> list:
+    """
+    Obtiene todos los usuarios registrados en el sistema.
+
+    Returns:
+        list: Lista de todos los usuarios con sus perfiles.
+    """
+    try:
+        with get_conn() as conn:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                """
+                SELECT ua.id_user, ua.email, ua.id_role, ua.state,
+                       up.first_name, up.last_name, up.phone
+                FROM user_account ua
+                LEFT JOIN user_profile up ON ua.id_user = up.id_user
+                ORDER BY ua.id_user DESC
+                """
+            )
+            users = cur.fetchall()
+            cur.close()
+            return users
+    except Exception as e:
+        logging.error(f"Error al obtener todos los usuarios: {str(e)}")
+        raise
+
+
+def get_user_by_id(user_id: int) -> Optional[dict]:
+    """
+    Obtiene un usuario por su ID.
+
+    Args:
+        user_id (int): ID del usuario.
+
+    Returns:
+        dict | None: Información del usuario o None si no existe.
+    """
+    try:
+        with get_conn() as conn:
+            cur = conn.cursor(dictionary=True)
+            cur.execute(
+                """
+                SELECT ua.id_user, ua.email, ua.id_role, ua.state,
+                       up.first_name, up.last_name, up.phone
+                FROM user_account ua
+                LEFT JOIN user_profile up ON ua.id_user = up.id_user
+                WHERE ua.id_user = %s
+                """,
+                (user_id,)
+            )
+            row = cur.fetchone()
+            cur.close()
+            return row
+    except Exception as e:
+        logging.error(f"Error al obtener usuario por ID ({user_id}): {str(e)}")
+        raise
+
+
+def update_user(user_id: int, user_data: dict) -> dict:
+    """
+    Actualiza los datos de un usuario.
+
+    Args:
+        user_id (int): ID del usuario a actualizar.
+        user_data (dict): Datos a actualizar.
+
+    Returns:
+        dict: Datos actualizados del usuario.
+    """
+    try:
+        with get_conn() as conn:
+            cur = conn.cursor()
+
+            # Actualizar datos del perfil
+            cur.execute(
+                """
+                UPDATE user_profile 
+                SET first_name = %s, last_name = %s, phone = %s
+                WHERE id_user = %s
+                """,
+                (user_data.get('first_name'), user_data.get('last_name'), 
+                 user_data.get('phone'), user_id)
+            )
+
+            # Actualizar email si se proporciona
+            if 'email' in user_data:
+                cur.execute(
+                    "UPDATE user_account SET email = %s WHERE id_user = %s",
+                    (user_data['email'], user_id)
+                )
+
+            # Actualizar rol si se proporciona
+            if 'id_role' in user_data:
+                cur.execute(
+                    "UPDATE user_account SET id_role = %s WHERE id_user = %s",
+                    (user_data['id_role'], user_id)
+                )
+
+            conn.commit()
+            cur.close()
+
+        # Obtener datos actualizados
+        return get_user_by_id(user_id)
+    except Exception as e:
+        logging.error(f"Error al actualizar usuario ({user_id}): {str(e)}")
+        raise
+
+
+def deactivate_user(user_id: int) -> bool:
+    """
+    Desactiva un usuario (soft delete).
+
+    Args:
+        user_id (int): ID del usuario a desactivar.
+
+    Returns:
+        bool: True si se desactivó correctamente.
+    """
+    try:
+        with get_conn() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE user_account SET state = FALSE WHERE id_user = %s",
+                (user_id,)
+            )
+            conn.commit()
+            cur.close()
+            return True
+    except Exception as e:
+        logging.error(f"Error al desactivar usuario ({user_id}): {str(e)}")
+        raise
+
+
+def activate_user(user_id: int) -> bool:
+    """
+    Reactiva un usuario.
+
+    Args:
+        user_id (int): ID del usuario a reactivar.
+
+    Returns:
+        bool: True si se reactivó correctamente.
+    """
+    try:
+        with get_conn() as conn:
+            cur = conn.cursor()
+            cur.execute(
+                "UPDATE user_account SET state = TRUE WHERE id_user = %s",
+                (user_id,)
+            )
+            conn.commit()
+            cur.close()
+            return True
+    except Exception as e:
+        logging.error(f"Error al reactivar usuario ({user_id}): {str(e)}")
+        raise

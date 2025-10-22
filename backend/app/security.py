@@ -1,10 +1,54 @@
 # backend/app/security.py
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from jose import jwt
+from jose import jwt, JWTError
+from fastapi import HTTPException, Depends, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from . import config
+from .core import user_logic
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+# Configuración para JWT
+security = HTTPBearer()
+
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """
+    Obtiene el usuario actual basado en el token JWT.
+    
+    Args:
+        credentials (HTTPAuthorizationCredentials): Credenciales de autorización.
+    
+    Returns:
+        dict: Información del usuario actual.
+    
+    Raises:
+        HTTPException: Si el token es inválido o el usuario no existe.
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, config.settings.SECRET_KEY, algorithms=[config.settings.ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    user = user_logic.get_user_by_email(email)
+    if user is None:
+        raise credentials_exception
+    
+    return {
+        "email": user["email"],
+        "role": user["id_role"],
+        "user_id": user["id_user"]
+    }
 
 def get_password_hash(password: str) -> str:
     """

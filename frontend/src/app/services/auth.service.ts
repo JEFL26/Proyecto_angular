@@ -5,6 +5,14 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { UserRegister, UserLogin, AuthResponse } from '../models/user.model';
 
+export interface UserInfo {
+  email: string;
+  first_name: string;
+  last_name: string;
+  role: number;
+  is_admin: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +24,10 @@ export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
+  // BehaviorSubject para información del usuario
+  private userInfoSubject = new BehaviorSubject<UserInfo | null>(this.getUserInfoFromToken());
+  public userInfo$ = this.userInfoSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   /**
@@ -23,6 +35,28 @@ export class AuthService {
    */
   private hasToken(): boolean {
     return !!localStorage.getItem('access_token');
+  }
+
+  /**
+   * Obtiene la información del usuario desde el token
+   */
+  private getUserInfoFromToken(): UserInfo | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      return {
+        email: decodedToken.email || '',
+        first_name: decodedToken.first_name || '',
+        last_name: decodedToken.last_name || '',
+        role: decodedToken.role || 0,
+        is_admin: decodedToken.is_admin || decodedToken.role === 1
+      };
+    } catch (error) {
+      console.error('Error decodificando token:', error);
+      return null;
+    }
   }
 
   register(user: UserRegister): Observable<any> {
@@ -42,6 +76,8 @@ export class AuthService {
           localStorage.setItem('access_token', response.access_token);
           // Actualizar estado de autenticación
           this.isAuthenticatedSubject.next(true);
+          // Actualizar información del usuario
+          this.userInfoSubject.next(this.getUserInfoFromToken());
         })
       );
   }
@@ -53,6 +89,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('access_token');
     this.isAuthenticatedSubject.next(false);
+    this.userInfoSubject.next(null);
   }
 
   /**
@@ -67,5 +104,36 @@ export class AuthService {
    */
   isLoggedIn(): boolean {
     return this.hasToken();
+  }
+
+  /**
+   * Obtiene la información actual del usuario
+   */
+  getCurrentUser(): UserInfo | null {
+    return this.userInfoSubject.value;
+  }
+
+  /**
+   * Verifica si el usuario es administrador
+   */
+  isAdmin(): boolean {
+    const userInfo = this.getCurrentUser();
+    return userInfo?.is_admin || false;
+  }
+
+  /**
+   * Verifica si el usuario es cliente
+   */
+  isClient(): boolean {
+    const userInfo = this.getCurrentUser();
+    return userInfo?.role === 2 || (!userInfo?.is_admin && userInfo?.role !== 1);
+  }
+
+  /**
+   * Obtiene el rol del usuario
+   */
+  getUserRole(): number {
+    const userInfo = this.getCurrentUser();
+    return userInfo?.role || 0;
   }
 }

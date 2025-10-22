@@ -37,3 +37,17 @@ export interface AuthResponse {
 export interface MessageResponse {
   msg: string;
 }
+
+/**
+ * Interface para la información completa del usuario
+ * Coincide con UserOut del backend
+ */
+export interface UserOut {
+  id_user: number;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  phone?: string;
+  id_role: number;
+  state: boolean;
+}

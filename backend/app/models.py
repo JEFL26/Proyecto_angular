@@ -40,19 +40,36 @@ class UserOut(BaseModel):
     Attributes:
         id_user (int): ID del usuario.
         email (EmailStr): Correo electrónico del usuario.
-        first_name (str): Nombre del usuario.
-        last_name (str): Apellido del usuario.
-        phone (str): Número de teléfono del usuario.
+        first_name (Optional[str]): Nombre del usuario.
+        last_name (Optional[str]): Apellido del usuario.
+        phone (Optional[str]): Número de teléfono del usuario.
         id_role (int): ID del rol del usuario.
         state (bool): Estado del usuario (activo/inactivo).
     """
     id_user: int
     email: EmailStr
-    first_name: str
-    last_name: str
-    phone: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone: Optional[str] = None
     id_role: int
     state: bool
+
+class UserUpdate(BaseModel):
+    """
+    Modelo para actualizar un usuario.
+
+    Attributes:
+        email (Optional[EmailStr]): Correo electrónico del usuario.
+        first_name (Optional[str]): Nombre del usuario.
+        last_name (Optional[str]): Apellido del usuario.
+        phone (Optional[str]): Número de teléfono del usuario.
+        id_role (Optional[int]): ID del rol del usuario.
+    """
+    email: Optional[EmailStr] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone: Optional[str] = None
+    id_role: Optional[int] = None
 
 class Token(BaseModel):
     """

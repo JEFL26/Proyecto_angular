@@ -7,6 +7,8 @@ import { RegisterComponent } from './modules/register/components/register.compon
 import { DashboardComponent } from './modules/admin/dashboard/components/dashboard.component';
 import { ServicesComponent } from './modules/admin/services/components/services.component';
 import { ServiceFormComponent } from './modules/admin/service-form/components/service-form.component';
+import { UserManagementComponent } from './modules/admin/user-management/components/user-management.component';
+import { ClientDashboardComponent } from './modules/client/dashboard/components/client-dashboard.component';
 import { AuthGuard } from './guards/auth.guard';
 
 /**
@@ -31,6 +33,7 @@ const routes: Routes = [
   { path: 'admin/services', component: ServicesComponent, canActivate: [AuthGuard] },
   { path: 'admin/services/new', component: ServiceFormComponent, canActivate: [AuthGuard] },
   { path: 'admin/services/edit/:id', component: ServiceFormComponent, canActivate: [AuthGuard] },
+  { path: 'admin/users', component: UserManagementComponent, canActivate: [AuthGuard] },
   { 
     path: 'admin', 
     component: DashboardComponent,
@@ -39,9 +42,24 @@ const routes: Routes = [
       { path: 'services', component: ServicesComponent },
       { path: 'services/new', component: ServiceFormComponent },
       { path: 'services/edit/:id', component: ServiceFormComponent },
+      { path: 'users', component: UserManagementComponent },
       { path: '', redirectTo: 'services', pathMatch: 'full' }
     ]
   },
+
+  // Panel cliente (solo accesible con token)
+  { path: 'client', component: ClientDashboardComponent, canActivate: [AuthGuard] },
+  { 
+    path: 'client', 
+    component: ClientDashboardComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'services', component: HomeComponent }, // Placeholder - crear componente de servicios para clientes
+      { path: 'reservations', component: HomeComponent }, // Placeholder - crear componente de reservas
+      { path: '', redirectTo: '', pathMatch: 'full' }
+    ]
+  },
+
   { path: '**', redirectTo: '/home' }
 ];
 

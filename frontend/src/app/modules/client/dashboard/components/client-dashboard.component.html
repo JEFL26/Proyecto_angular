@@ -1,0 +1,125 @@
+<div class="client-dashboard-container">
+  <aside class="sidebar">
+    <div class="user-info">
+      <div class="user-avatar">
+        <span>{{ getUserInitials() }}</span>
+      </div>
+      <div class="user-details">
+        <h3>{{ userInfo?.first_name }} {{ userInfo?.last_name }}</h3>
+        <p>{{ userInfo?.email }}</p>
+      </div>
+    </div>
+    
+    <nav>
+      <ul>
+        <li><a routerLink="/client" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a></li>
+        <li><a routerLink="/client/services" routerLinkActive="active">Servicios</a></li>
+        <li><a routerLink="/client/reservations" routerLinkActive="active">Mis Reservas</a></li>
+      </ul>
+    </nav>
+    
+    <button (click)="logout()" class="logout-btn">Cerrar sesión</button>
+  </aside>
+
+  <main class="content">
+    <div class="dashboard-content">
+      <div class="welcome-section">
+        <h1>¡Bienvenido, {{ userInfo?.first_name }}!</h1>
+        <p>Explora nuestros servicios y gestiona tus reservas</p>
+      </div>
+      
+      <!-- Resumen de servicios -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">📋</div>
+          <h3>Servicios Disponibles</h3>
+          <span class="stat-number">{{ getActiveServicesCount() }}</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏰</div>
+          <h3>Mis Reservas</h3>
+          <span class="stat-number">0</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <h3>Servicios Favoritos</h3>
+          <span class="stat-number">0</span>
+        </div>
+      </div>
+
+      <!-- Servicios destacados -->
+      <div class="services-section">
+        <div class="section-header">
+          <h2>Servicios Disponibles</h2>
+          <button (click)="goToServices()" class="btn-primary">Ver Todos</button>
+        </div>
+        
+        <div *ngIf="loading" class="loading">
+          <div class="loading-spinner"></div>
+          <p>Cargando servicios...</p>
+        </div>
+        
+        <div *ngIf="error" class="error">
+          <p>{{ error }}</p>
+          <button (click)="fetchServices()" class="btn-secondary">Reintentar</button>
+        </div>
+        
+        <div *ngIf="!loading && !error && services.length === 0" class="no-services">
+          <div class="no-services-icon">🔍</div>
+          <p>No hay servicios disponibles en este momento.</p>
+          <p>Vuelve más tarde para ver nuestros servicios.</p>
+        </div>
+        
+        <div *ngIf="!loading && !error && services.length > 0" class="services-grid">
+          <div *ngFor="let service of services.slice(0, 6)" class="service-card">
+            <div class="service-header">
+              <h3>{{ service.name }}</h3>
+              <span class="price-tag">${{ service.price | number:'1.2-2' }}</span>
+            </div>
+            <div class="service-body">
+              <p class="description">{{ service.description }}</p>
+              <div class="service-details">
+                <div class="detail-item">
+                  <span class="icon">⏱️</span>
+                  <span class="value">{{ service.duration_minutes }} min</span>
+                </div>
+                <div class="detail-item">
+                  <span class="icon">💰</span>
+                  <span class="value">${{ service.price | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="service-actions">
+              <button class="btn-primary">Reservar</button>
+              <button class="btn-secondary">Ver Detalles</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones rápidas -->
+      <div class="quick-actions">
+        <h2>Acciones Rápidas</h2>
+        <div class="actions-grid">
+          <button (click)="goToServices()" class="action-card">
+            <div class="action-icon">🔍</div>
+            <h3>Explorar Servicios</h3>
+            <p>Descubre todos nuestros servicios disponibles</p>
+          </button>
+          <button (click)="goToReservations()" class="action-card">
+            <div class="action-icon">📅</div>
+            <h3>Mis Reservas</h3>
+            <p>Gestiona tus reservas existentes</p>
+          </button>
+          <button class="action-card">
+            <div class="action-icon">📞</div>
+            <h3>Contactar</h3>
+            <p>Ponte en contacto con nosotros</p>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <router-outlet></router-outlet>
+  </main>
+</div>

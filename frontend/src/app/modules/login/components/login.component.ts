@@ -46,12 +46,12 @@ export class LoginComponent {
         // Guarda token
         localStorage.setItem('access_token', response.access_token);
 
-        // Si el usuario es admin, ir a /admin; si no, a /home
+        // Redirección basada en rol
         const decodedToken = JSON.parse(atob(response.access_token.split('.')[1]));
         if (decodedToken.role === 1 || decodedToken.is_admin) {
           this.router.navigate(['/admin']);
         } else {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/client']);
         }
       },
       error: (error) => {

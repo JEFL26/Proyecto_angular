@@ -14,11 +14,14 @@ import { RegisterComponent } from './modules/register/components/register.compon
 
 // Importar servicios y guards
 import { AuthService } from './services/auth.service';
+import { UserManagementService } from './services/user-management.service';
 import { AuthGuard } from './guards/auth.guard';
 import { DashboardComponent } from './modules/admin/dashboard/components/dashboard.component';
 import { ServicesComponent } from './modules/admin/services/components/services.component';
 import { ServiceFormComponent } from './modules/admin/service-form/components/service-form.component';
 import { ReservationsComponent } from './modules/admin/reservations/components/reservations.component';
+import { UserManagementComponent } from './modules/admin/user-management/components/user-management.component';
+import { ClientDashboardComponent } from './modules/client/dashboard/components/client-dashboard.component';
 
 /**
  * Módulo principal de la aplicación
@@ -37,7 +40,9 @@ import { ReservationsComponent } from './modules/admin/reservations/components/r
     DashboardComponent,
     ServicesComponent,
     ServiceFormComponent,
-    ReservationsComponent
+    ReservationsComponent,
+    UserManagementComponent,
+    ClientDashboardComponent
   ],
   imports: [
     BrowserModule,           // Módulo esencial para apps de navegador
@@ -47,6 +52,7 @@ import { ReservationsComponent } from './modules/admin/reservations/components/r
   ],
   providers: [
     AuthService,             // Servicio de autenticación
+    UserManagementService,   // Servicio de gestión de usuarios
     AuthGuard                // Guard de protección de rutas
   ],
   bootstrap: [AppComponent]  // Componente inicial

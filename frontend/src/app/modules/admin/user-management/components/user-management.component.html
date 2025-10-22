@@ -1,0 +1,169 @@
+<!-- frontend/src/app/modules/admin/user-management/components/user-management.component.html -->
+<div class="user-management-container">
+  <div class="user-management-content">
+    <div class="header">
+      <h1>Gestión de Usuarios</h1>
+      <button (click)="loadUsers()" class="btn-refresh" [disabled]="loading">
+        <i class="icon-refresh"></i> Actualizar
+      </button>
+    </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="error = null" class="btn-close">×</button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <!-- Lista de usuarios -->
+  <div *ngIf="!loading && !error" class="users-section">
+    <div class="users-stats">
+      <div class="stat-card">
+        <h3>Total de Usuarios</h3>
+        <span class="stat-number">{{ users.length }}</span>
+      </div>
+      <div class="stat-card">
+        <h3>Usuarios Activos</h3>
+        <span class="stat-number">{{ getActiveUsersCount() }}</span>
+      </div>
+      <div class="stat-card">
+        <h3>Usuarios Inactivos</h3>
+        <span class="stat-number">{{ getInactiveUsersCount() }}</span>
+      </div>
+    </div>
+
+    <div *ngIf="users.length === 0" class="no-users">
+      <p>No hay usuarios registrados en el sistema.</p>
+    </div>
+
+    <div *ngIf="users.length > 0" class="users-list">
+      <div *ngFor="let user of users" class="user-card" [class.inactive]="!user.state">
+        <!-- Vista normal del usuario -->
+        <div *ngIf="editingUser?.id_user !== user.id_user" class="user-content">
+          <div class="user-header">
+            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+            <span class="status-badge" [class.active]="user.state" [class.inactive]="!user.state">
+              {{ getUserStateText(user.state) }}
+            </span>
+          </div>
+          
+          <div class="user-details">
+            <div class="detail-row">
+              <span class="label">Email:</span>
+              <span class="value">{{ user.email }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Teléfono:</span>
+              <span class="value">{{ user.phone || 'No especificado' }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Rol:</span>
+              <span class="value">{{ getRoleName(user.id_role) }}</span>
+            </div>
+          </div>
+
+          <div class="user-actions">
+            <button (click)="startEdit(user)" class="btn-edit" [disabled]="loading">
+              <i class="icon-edit"></i> Editar
+            </button>
+            <button 
+              *ngIf="user.state" 
+              (click)="deactivateUser(user)" 
+              class="btn-deactivate" 
+              [disabled]="loading">
+              <i class="icon-deactivate"></i> Desactivar
+            </button>
+            <button 
+              *ngIf="!user.state" 
+              (click)="activateUser(user)" 
+              class="btn-activate" 
+              [disabled]="loading">
+              <i class="icon-activate"></i> Reactivar
+            </button>
+          </div>
+        </div>
+
+        <!-- Formulario de edición -->
+        <div *ngIf="editingUser?.id_user === user.id_user" class="edit-form">
+          <h3>Editar Usuario</h3>
+          <form (ngSubmit)="saveUser()">
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input 
+                type="email" 
+                id="email" 
+                [(ngModel)]="editForm.email" 
+                name="email"
+                required>
+            </div>
+            
+            <div class="form-row">
+            <div class="form-group">
+              <label for="first_name">Nombre:</label>
+              <input 
+                type="text" 
+                id="first_name" 
+                [(ngModel)]="editForm.first_name" 
+                name="first_name"
+                placeholder="Nombre del usuario">
+            </div>
+            <div class="form-group">
+              <label for="last_name">Apellido:</label>
+              <input 
+                type="text" 
+                id="last_name" 
+                [(ngModel)]="editForm.last_name" 
+                name="last_name"
+                placeholder="Apellido del usuario">
+            </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Teléfono:</label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  [(ngModel)]="editForm.phone" 
+                  name="phone"
+                  placeholder="Número de teléfono">
+              </div>
+              <div class="form-group">
+                <label for="id_role">Rol:</label>
+                <select 
+                  id="id_role" 
+                  [(ngModel)]="editForm.id_role" 
+                  name="id_role"
+                  required>
+                  <option value="1">Administrador</option>
+                  <option value="2">Cliente</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-save" [disabled]="loading">
+                <i class="icon-save"></i> Guardar
+              </button>
+              <button type="button" (click)="cancelEdit()" class="btn-cancel" [disabled]="loading">
+                <i class="icon-cancel"></i> Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Botón volver -->
+    <div class="footer-actions">
+      <button type="button" class="btn-back" (click)="back()">
+        ← Volver al panel
+      </button>
+    </div>
+  </div>
+</div>

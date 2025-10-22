@@ -1,6 +1,5 @@
 // frontend/src/app/modules/admin/user-management/components/user-management.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { UserManagementService, UserUpdate } from '../../../../services/user-management.service';
 import { UserOut } from '../../../../models/user.model';
 
@@ -16,10 +15,7 @@ export class UserManagementComponent implements OnInit {
   editingUser: UserOut | null = null;
   editForm: UserUpdate = {};
 
-  constructor(
-    private userManagementService: UserManagementService,
-    private router: Router
-  ) {}
+  constructor(private userManagementService: UserManagementService) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -195,12 +191,5 @@ export class UserManagementComponent implements OnInit {
    */
   getInactiveUsersCount(): number {
     return this.users.filter(u => !u.state).length;
-  }
-
-  /**
-   * Navega de vuelta al panel de administración
-   */
-  back(): void {
-    this.router.navigate(['/admin']);
   }
 }

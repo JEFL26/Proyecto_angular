@@ -4,16 +4,7 @@
   color: #333;
   background: #fafafa;
   min-height: 100vh;
-  padding: 30px 20px;
-}
-
-.user-management-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 40px;
+  padding: 0;
 }
 
 .header {
@@ -378,37 +369,6 @@
   border-top: 1px solid #e9ecef;
 }
 
-/* Footer actions */
-.footer-actions {
-  margin-top: 40px;
-  padding-top: 25px;
-  border-top: 2px solid #e9ecef;
-  display: flex;
-  justify-content: flex-start;
-}
-
-.btn-back {
-  background: #e0e0e0;
-  color: #333;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.btn-back:hover {
-  background: #d0d0d0;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
 /* Iconos mejorados */
 .icon-refresh::before { content: "🔄"; }
 .icon-edit::before { content: "✏️"; }
@@ -420,12 +380,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .user-management-container {
-    padding: 15px 10px;
-  }
-  
-  .user-management-content {
-    padding: 20px;
-    margin: 0;
+    padding: 15px;
   }
   
   .header {
@@ -473,17 +428,5 @@
   .btn-edit, .btn-deactivate, .btn-activate, .btn-save, .btn-cancel {
     width: 100%;
     justify-content: center;
-  }
-  
-  .footer-actions {
-    margin-top: 30px;
-    padding-top: 20px;
-  }
-  
-  .btn-back {
-    width: 100%;
-    justify-content: center;
-    padding: 14px 24px;
-    font-size: 16px;
   }
 }

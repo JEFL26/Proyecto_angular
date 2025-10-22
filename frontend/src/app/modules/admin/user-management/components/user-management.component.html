@@ -1,12 +1,11 @@
 <!-- frontend/src/app/modules/admin/user-management/components/user-management.component.html -->
 <div class="user-management-container">
-  <div class="user-management-content">
-    <div class="header">
-      <h1>Gestión de Usuarios</h1>
-      <button (click)="loadUsers()" class="btn-refresh" [disabled]="loading">
-        <i class="icon-refresh"></i> Actualizar
-      </button>
-    </div>
+  <div class="header">
+    <h1>Gestión de Usuarios</h1>
+    <button (click)="loadUsers()" class="btn-refresh" [disabled]="loading">
+      <i class="icon-refresh"></i> Actualizar
+    </button>
+  </div>
 
   <!-- Mensaje de error -->
   <div *ngIf="error" class="error-message">
@@ -156,14 +155,6 @@
           </form>
         </div>
       </div>
-    </div>
-  </div>
-
-    <!-- Botón volver -->
-    <div class="footer-actions">
-      <button type="button" class="btn-back" (click)="back()">
-        ← Volver al panel
-      </button>
     </div>
   </div>
 </div>

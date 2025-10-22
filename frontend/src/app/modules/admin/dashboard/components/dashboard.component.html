@@ -11,6 +11,72 @@
   </aside>
 
   <main class="content">
+    <div class="dashboard-content">
+      <h1>Dashboard de Servicios</h1>
+      
+      <!-- Resumen de servicios -->
+      <div class="stats-container">
+        <div class="stat-card">
+          <h3>Total de Servicios</h3>
+          <span class="stat-number">{{ services.length }}</span>
+        </div>
+        <div class="stat-card">
+          <h3>Servicios Activos</h3>
+          <span class="stat-number">{{ getActiveServicesCount() }}</span>
+        </div>
+        <div class="stat-card">
+          <h3>Servicios Inactivos</h3>
+          <span class="stat-number">{{ getInactiveServicesCount() }}</span>
+        </div>
+      </div>
+
+      <!-- Lista de servicios -->
+      <div class="services-section">
+        <h2>Servicios Registrados</h2>
+        
+        <div *ngIf="loading" class="loading">
+          <p>Cargando servicios...</p>
+        </div>
+        
+        <div *ngIf="error" class="error">
+          <p>{{ error }}</p>
+          <button (click)="fetchServices()">Reintentar</button>
+        </div>
+        
+        <div *ngIf="!loading && !error && services.length === 0" class="no-services">
+          <p>No hay servicios registrados aún.</p>
+          <button routerLink="/admin/services" class="btn-primary">Crear Primer Servicio</button>
+        </div>
+        
+        <div *ngIf="!loading && !error && services.length > 0" class="services-grid">
+          <div *ngFor="let service of services" class="service-card" [class.inactive]="!service.state">
+            <div class="service-header">
+              <h3>{{ service.name }}</h3>
+              <span class="status-badge" [class.active]="service.state" [class.inactive]="!service.state">
+                {{ service.state ? 'Activo' : 'Inactivo' }}
+              </span>
+            </div>
+            <div class="service-body">
+              <p class="description">{{ service.description }}</p>
+              <div class="service-details">
+                <div class="detail-item">
+                  <span class="label">Duración:</span>
+                  <span class="value">{{ service.duration_minutes }} min</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Precio:</span>
+                  <span class="value">${{ service.price | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="service-actions">
+              <button routerLink="/admin/services" class="btn-secondary">Gestionar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <router-outlet></router-outlet>
   </main>
 </div>

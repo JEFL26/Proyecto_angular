@@ -9,6 +9,7 @@ import { ServicesComponent } from './modules/admin/services/components/services.
 import { ServiceFormComponent } from './modules/admin/service-form/components/service-form.component';
 import { UserManagementComponent } from './modules/admin/user-management/components/user-management.component';
 import { ClientDashboardComponent } from './modules/client/dashboard/components/client-dashboard.component';
+import { ClientReservationsComponent } from './modules/client/reservations/components/client-reservations.component';
 import { AuthGuard } from './guards/auth.guard';
 
 /**
@@ -49,16 +50,7 @@ const routes: Routes = [
 
   // Panel cliente (solo accesible con token)
   { path: 'client', component: ClientDashboardComponent, canActivate: [AuthGuard] },
-  { 
-    path: 'client', 
-    component: ClientDashboardComponent,
-    canActivate: [AuthGuard],
-    children: [
-      { path: 'services', component: HomeComponent }, // Placeholder - crear componente de servicios para clientes
-      { path: 'reservations', component: HomeComponent }, // Placeholder - crear componente de reservas
-      { path: '', redirectTo: '', pathMatch: 'full' }
-    ]
-  },
+  { path: 'client/reservations', component: ClientReservationsComponent, canActivate: [AuthGuard] },
 
   { path: '**', redirectTo: '/home' }
 ];

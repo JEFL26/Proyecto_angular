@@ -108,3 +108,50 @@ class ServiceOut(ServiceBase):
         id_service (int): ID del servicio.
     """
     id_service: int
+
+# Modelos de reservas
+class ReservationCreate(BaseModel):
+    """
+    Modelo para crear una nueva reserva.
+
+    Attributes:
+        id_service (int): ID del servicio a reservar.
+        scheduled_datetime (str): Fecha y hora de la reserva (formato: YYYY-MM-DD HH:MM:SS).
+        payment_method (str): Método de pago (Efectivo, Tarjeta, Transferencia).
+    """
+    id_service: int
+    scheduled_datetime: str
+    payment_method: str
+
+class ReservationOut(BaseModel):
+    """
+    Modelo para la respuesta de información de la reserva.
+
+    Attributes:
+        id_reservation (int): ID de la reserva.
+        id_user (int): ID del usuario que hizo la reserva.
+        id_service (int): ID del servicio reservado.
+        id_reservation_status (int): ID del estado de la reserva.
+        scheduled_datetime (str): Fecha y hora de la reserva.
+        created_at (str): Fecha de creación de la reserva.
+        total_price (float): Precio total de la reserva.
+        payment_method (str): Método de pago.
+        state (bool): Estado de la reserva.
+        service_name (Optional[str]): Nombre del servicio.
+        status_name (Optional[str]): Nombre del estado de la reserva.
+        service_description (Optional[str]): Descripción del servicio.
+        duration_minutes (Optional[int]): Duración del servicio en minutos.
+    """
+    id_reservation: int
+    id_user: int
+    id_service: int
+    id_reservation_status: int
+    scheduled_datetime: str
+    created_at: str
+    total_price: float
+    payment_method: str
+    state: bool
+    service_name: Optional[str] = None
+    status_name: Optional[str] = None
+    service_description: Optional[str] = None
+    duration_minutes: Optional[int] = None

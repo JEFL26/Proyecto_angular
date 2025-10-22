@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from app.rutas import auth, service, upload_excel, users 
+from app.rutas import auth, service, upload_excel, users, reservation 
 from app.database import init_pool, get_conn
 from mysql.connector import Error as MySQLError
 import logging
@@ -14,7 +14,8 @@ app = FastAPI(
     openapi_tags=[
         {"name": "Auth", "description": "Registro y autenticación de usuarios"},
         {"name": "Services", "description": "Gestión de servicios (solo admin)"},
-        {"name": "Users", "description": "Gestión de usuarios (solo admin)"}
+        {"name": "Users", "description": "Gestión de usuarios (solo admin)"},
+        {"name": "Reservations", "description": "Gestión de reservas"}
     ]
 )
 
@@ -62,6 +63,7 @@ app.include_router(auth.router)
 app.include_router(service.router)
 app.include_router(upload_excel.router)
 app.include_router(users.router)
+app.include_router(reservation.router)
 
 @app.on_event("startup")
 async def startup():

@@ -13,7 +13,6 @@
     <nav>
       <ul>
         <li><a routerLink="/client" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a></li>
-        <li><a routerLink="/client/services" routerLinkActive="active">Servicios</a></li>
         <li><a routerLink="/client/reservations" routerLinkActive="active">Mis Reservas</a></li>
       </ul>
     </nav>
@@ -28,7 +27,7 @@
         <p>Explora nuestros servicios y gestiona tus reservas</p>
       </div>
       
-      <!-- Resumen de servicios -->
+      <!-- Resumen de servicios y reservas -->
       <div class="stats-container">
         <div class="stat-card">
           <div class="stat-icon">📋</div>
@@ -38,20 +37,26 @@
         <div class="stat-card">
           <div class="stat-icon">⏰</div>
           <h3>Mis Reservas</h3>
-          <span class="stat-number">0</span>
+          <span class="stat-number">{{ getReservationsCount() }}</span>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">⭐</div>
-          <h3>Servicios Favoritos</h3>
-          <span class="stat-number">0</span>
+          <div class="stat-icon">✅</div>
+          <h3>Reservas Confirmadas</h3>
+          <span class="stat-number">{{ getConfirmedReservationsCount() }}</span>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏳</div>
+          <h3>Reservas Pendientes</h3>
+          <span class="stat-number">{{ getPendingReservationsCount() }}</span>
         </div>
       </div>
 
-      <!-- Servicios destacados -->
+
+      <!-- Servicios disponibles para reservar -->
       <div class="services-section">
         <div class="section-header">
           <h2>Servicios Disponibles</h2>
-          <button (click)="goToServices()" class="btn-primary">Ver Todos</button>
+          <button (click)="goToReservations()" class="btn-secondary">Ver Mis Reservas</button>
         </div>
         
         <div *ngIf="loading" class="loading">
@@ -90,8 +95,7 @@
               </div>
             </div>
             <div class="service-actions">
-              <button class="btn-primary">Reservar</button>
-              <button class="btn-secondary">Ver Detalles</button>
+              <button class="btn-primary" (click)="openReservationModal(service)">Reservar</button>
             </div>
           </div>
         </div>
@@ -101,11 +105,6 @@
       <div class="quick-actions">
         <h2>Acciones Rápidas</h2>
         <div class="actions-grid">
-          <button (click)="goToServices()" class="action-card">
-            <div class="action-icon">🔍</div>
-            <h3>Explorar Servicios</h3>
-            <p>Descubre todos nuestros servicios disponibles</p>
-          </button>
           <button (click)="goToReservations()" class="action-card">
             <div class="action-icon">📅</div>
             <h3>Mis Reservas</h3>
@@ -123,3 +122,62 @@
     <router-outlet></router-outlet>
   </main>
 </div>
+
+<!-- Modal de Reserva -->
+<div *ngIf="showReservationModal" class="modal-overlay" (click)="closeReservationModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Reservar Servicio</h2>
+      <button class="close-btn" (click)="closeReservationModal()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="service-info">
+        <h3>{{ selectedService?.name }}</h3>
+        <p class="service-description">{{ selectedService?.description }}</p>
+        <div class="service-details-modal">
+          <div class="detail-item">
+            <span class="icon">⏱️</span>
+            <span>{{ selectedService?.duration_minutes }} minutos</span>
+          </div>
+          <div class="detail-item">
+            <span class="icon">💰</span>
+            <span>${{ selectedService?.price | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <form class="reservation-form">
+        <div class="form-group">
+          <label for="datetime">Fecha y Hora de la Reserva</label>
+          <input 
+            type="datetime-local" 
+            id="datetime"
+            [(ngModel)]="reservationData.scheduled_datetime"
+            [min]="getMinDateTime()"
+            name="datetime"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="payment">Método de Pago</label>
+          <select 
+            id="payment"
+            [(ngModel)]="reservationData.payment_method"
+            name="payment"
+            required>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeReservationModal()">Cancelar</button>
+      <button class="btn-primary" (click)="submitReservation()">Confirmar Reserva</button>
+    </div>
+  </div>
+</div>
+

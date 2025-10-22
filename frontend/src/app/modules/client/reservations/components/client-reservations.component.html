@@ -1,0 +1,114 @@
+<div class="client-dashboard-container">
+  <aside class="sidebar">
+    <div class="user-info">
+      <div class="user-avatar">
+        <span>{{ getUserInitials() }}</span>
+      </div>
+      <div class="user-details">
+        <h3>{{ userInfo?.first_name }} {{ userInfo?.last_name }}</h3>
+        <p>{{ userInfo?.email }}</p>
+      </div>
+    </div>
+    
+    <nav>
+      <ul>
+        <li><a routerLink="/client" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Inicio</a></li>
+        <li><a routerLink="/client/services" routerLinkActive="active">Servicios</a></li>
+      </ul>
+    </nav>
+    
+    <button (click)="logout()" class="logout-btn">Cerrar sesión</button>
+  </aside>
+
+  <main class="content">
+    <div class="reservations-content">
+      <div class="header-section">
+        <h1>Mis Reservas</h1>
+        <button (click)="goToDashboard()" class="btn-primary">Hacer Nueva Reserva</button>
+      </div>
+
+      <div *ngIf="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p>Cargando reservas...</p>
+      </div>
+
+      <div *ngIf="error" class="error">
+        <p>{{ error }}</p>
+        <button (click)="fetchReservations()" class="btn-secondary">Reintentar</button>
+      </div>
+
+      <div *ngIf="!loading && !error && reservations.length === 0" class="no-reservations">
+        <div class="no-reservations-icon">📅</div>
+        <h2>No tienes reservas</h2>
+        <p>Aún no has realizado ninguna reserva.</p>
+        <button (click)="goToDashboard()" class="btn-primary">Explorar Servicios</button>
+      </div>
+
+      <div *ngIf="!loading && !error && reservations.length > 0" class="reservations-grid">
+        <div *ngFor="let reservation of reservations" class="reservation-card">
+          <div class="reservation-header">
+            <h3>{{ reservation.service_name }}</h3>
+            <span [ngClass]="getStatusClass(reservation.status_name || '')">
+              {{ reservation.status_name }}
+            </span>
+          </div>
+
+          <div class="reservation-body">
+            <div class="reservation-detail">
+              <span class="icon">📅</span>
+              <div class="detail-content">
+                <span class="label">Fecha y Hora</span>
+                <span class="value">{{ formatDateTime(reservation.scheduled_datetime) }}</span>
+              </div>
+            </div>
+
+            <div class="reservation-detail">
+              <span class="icon">⏱️</span>
+              <div class="detail-content">
+                <span class="label">Duración</span>
+                <span class="value">{{ reservation.duration_minutes }} minutos</span>
+              </div>
+            </div>
+
+            <div class="reservation-detail">
+              <span class="icon">💰</span>
+              <div class="detail-content">
+                <span class="label">Precio Total</span>
+                <span class="value">${{ reservation.total_price | number:'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <div class="reservation-detail">
+              <span class="icon">💳</span>
+              <div class="detail-content">
+                <span class="label">Método de Pago</span>
+                <span class="value">{{ reservation.payment_method }}</span>
+              </div>
+            </div>
+
+            <div class="reservation-detail">
+              <span class="icon">🕐</span>
+              <div class="detail-content">
+                <span class="label">Fecha de Reserva</span>
+                <span class="value">{{ formatDateTime(reservation.created_at || '') }}</span>
+              </div>
+            </div>
+
+            <div *ngIf="reservation.service_description" class="description">
+              <p>{{ reservation.service_description }}</p>
+            </div>
+          </div>
+
+          <div class="reservation-actions" *ngIf="canCancelReservation(reservation)">
+            <button 
+              (click)="cancelReservation(reservation.id_reservation!)" 
+              class="btn-cancel">
+              Cancelar Reserva
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+

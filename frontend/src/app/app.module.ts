@@ -22,6 +22,7 @@ import { ServiceFormComponent } from './modules/admin/service-form/components/se
 import { ReservationsComponent } from './modules/admin/reservations/components/reservations.component';
 import { UserManagementComponent } from './modules/admin/user-management/components/user-management.component';
 import { ClientDashboardComponent } from './modules/client/dashboard/components/client-dashboard.component';
+import { ClientReservationsComponent } from './modules/client/reservations/components/client-reservations.component';
 
 /**
  * Módulo principal de la aplicación
@@ -42,7 +43,8 @@ import { ClientDashboardComponent } from './modules/client/dashboard/components/
     ServiceFormComponent,
     ReservationsComponent,
     UserManagementComponent,
-    ClientDashboardComponent
+    ClientDashboardComponent,
+    ClientReservationsComponent
   ],
   imports: [
     BrowserModule,           // Módulo esencial para apps de navegador

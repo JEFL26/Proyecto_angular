@@ -7,7 +7,8 @@ export interface Reservation {
   id_user?: number;
   id_service: number;
   id_reservation_status?: number;
-  scheduled_datetime: string;
+  start_datetime: string;
+  end_datetime: string;
   created_at?: string;
   total_price?: number;
   payment_method: string;
@@ -23,7 +24,8 @@ export interface Reservation {
 
 export interface ReservationCreate {
   id_service: number;
-  scheduled_datetime: string;
+  start_datetime: string;
+  end_datetime: string;
   payment_method: string;
 }
 

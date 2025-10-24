@@ -116,11 +116,13 @@ class ReservationCreate(BaseModel):
 
     Attributes:
         id_service (int): ID del servicio a reservar.
-        scheduled_datetime (str): Fecha y hora de la reserva (formato: YYYY-MM-DD HH:MM:SS).
+        start_datetime (str): Fecha y hora de inicio de la reserva (formato: YYYY-MM-DD HH:MM:SS).
+        end_datetime (str): Fecha y hora de finalización de la reserva (formato: YYYY-MM-DD HH:MM:SS).
         payment_method (str): Método de pago (Efectivo, Tarjeta, Transferencia).
     """
     id_service: int
-    scheduled_datetime: str
+    start_datetime: str
+    end_datetime: str
     payment_method: str
 
 class ReservationOut(BaseModel):
@@ -132,7 +134,8 @@ class ReservationOut(BaseModel):
         id_user (int): ID del usuario que hizo la reserva.
         id_service (int): ID del servicio reservado.
         id_reservation_status (int): ID del estado de la reserva.
-        scheduled_datetime (str): Fecha y hora de la reserva.
+        start_datetime (str): Fecha y hora de inicio de la reserva.
+        end_datetime (str): Fecha y hora de finalización de la reserva.
         created_at (str): Fecha de creación de la reserva.
         total_price (float): Precio total de la reserva.
         payment_method (str): Método de pago.
@@ -146,7 +149,8 @@ class ReservationOut(BaseModel):
     id_user: int
     id_service: int
     id_reservation_status: int
-    scheduled_datetime: str
+    start_datetime: str
+    end_datetime: str
     created_at: str
     total_price: float
     payment_method: str

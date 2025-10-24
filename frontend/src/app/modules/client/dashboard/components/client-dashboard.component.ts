@@ -18,7 +18,7 @@ export class ClientDashboardComponent implements OnInit {
   showReservationModal = false;
   selectedService: Service | null = null;
   reservationData = {
-    scheduled_datetime: '',
+    start_datetime: '',
     payment_method: 'Efectivo'
   };
 
@@ -119,27 +119,31 @@ export class ClientDashboardComponent implements OnInit {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const formatted = tomorrow.toISOString().slice(0, 16);
-    this.reservationData.scheduled_datetime = formatted;
+    this.reservationData.start_datetime = formatted;
   }
 
   closeReservationModal(): void {
     this.showReservationModal = false;
     this.selectedService = null;
     this.reservationData = {
-      scheduled_datetime: '',
+      start_datetime: '',
       payment_method: 'Efectivo'
     };
   }
 
   submitReservation(): void {
-    if (!this.selectedService || !this.reservationData.scheduled_datetime) {
+    if (!this.selectedService || !this.reservationData.start_datetime) {
       alert('Por favor completa todos los campos');
       return;
     }
 
+    const start = new Date(this.reservationData.start_datetime);
+    const end = new Date(start.getTime() + (this.selectedService.duration_minutes * 60000)); // sumamos minutos
+
     const reservation: ReservationCreate = {
       id_service: this.selectedService.id_service!,
-      scheduled_datetime: this.reservationData.scheduled_datetime.replace('T', ' ') + ':00',
+      start_datetime: this.reservationData.start_datetime.replace('T', ' ') + ':00',
+      end_datetime: end.toISOString().slice(0, 19).replace('T', ' '),
       payment_method: this.reservationData.payment_method
     };
 
@@ -150,12 +154,10 @@ export class ClientDashboardComponent implements OnInit {
         console.log('Respuesta exitosa:', response);
         alert('¡Reserva creada exitosamente!');
         this.closeReservationModal();
-        this.fetchReservations(); // Actualizar las reservas
+        this.fetchReservations();
       },
       error: (err) => {
         console.error('Error completo:', err);
-        console.error('Error status:', err.status);
-        console.error('Error message:', err.error);
         const errorMsg = err.error?.detail || err.message || 'Error desconocido';
         alert('Error al crear la reserva: ' + errorMsg);
       }

@@ -54,7 +54,7 @@ def verify_admin_token(authorization: str = Header(...)):
 @router.post("/", response_model=dict)
 def create_reservation(data: ReservationCreate, user: dict = Depends(get_current_user)):
     """
-    Crea una nueva reserva para el usuario autenticado.
+    Crea una nueva reserva con inicio y fin específicos.
     
     Args:
         data (ReservationCreate): Datos de la reserva.

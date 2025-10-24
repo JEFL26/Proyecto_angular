@@ -4,7 +4,7 @@ from ..database import get_conn
 
 def create_reservation(id_user: int, reservation_data: dict):
     """
-    Crea una nueva reserva para un cliente.
+    Crea una nueva reserva y bloquea el horario en el calendario.
     
     Args:
         id_user (int): ID del usuario que hace la reserva.
@@ -16,31 +16,51 @@ def create_reservation(id_user: int, reservation_data: dict):
     try:
         with get_conn() as conn:
             cur = conn.cursor(dictionary=True)
-            
-            # Obtener el precio del servicio
+
+            # 1️⃣ Validar servicio activo y obtener duración / precio
             cur.execute(
-                "SELECT price FROM service WHERE id_service = %s AND state = TRUE",
+                "SELECT name, duration_minutes, price FROM service WHERE id_service = %s AND state = TRUE",
                 (reservation_data["id_service"],)
             )
             service = cur.fetchone()
-            
             if not service:
                 raise ValueError("Service not found or inactive")
-            
+
             total_price = service["price"]
-            
-            # Crear la reserva
+
+            # 2️⃣ Crear reserva
             cur.execute(
                 """INSERT INTO reservation 
-                (id_user, id_service, id_reservation_status, scheduled_datetime, total_price, payment_method, state)
-                VALUES (%s, %s, 1, %s, %s, %s, TRUE)""",
-                (id_user, reservation_data["id_service"], reservation_data["scheduled_datetime"], 
-                 total_price, reservation_data["payment_method"])
+                (id_user, id_service, id_reservation_status, start_datetime, end_datetime, total_price, payment_method, state)
+                VALUES (%s, %s, 1, %s, %s, %s, %s, TRUE)""",
+                (
+                    id_user,
+                    reservation_data["id_service"],
+                    reservation_data["start_datetime"],
+                    reservation_data["end_datetime"],
+                    total_price,
+                    reservation_data["payment_method"]
+                )
             )
-            conn.commit()
             new_id = cur.lastrowid
+
+            # 3️⃣ Crear bloque en calendario
+            cur.execute(
+                """INSERT INTO calendar_block 
+                (id_reservation, title, start_datetime, end_datetime, color, type, state)
+                VALUES (%s, %s, %s, %s, '#b3ffb3', 'reservation', TRUE)""",
+                (
+                    new_id,
+                    f"Reserva: {service['name']}",
+                    reservation_data["start_datetime"],
+                    reservation_data["end_datetime"]
+                )
+            )
+
+            conn.commit()
             cur.close()
             return new_id
+
     except ValueError:
         raise
     except Exception as e:
@@ -66,7 +86,8 @@ def get_user_reservations(id_user: int):
                     r.id_user,
                     r.id_service,
                     r.id_reservation_status,
-                    r.scheduled_datetime,
+                    r.start_datetime,
+                    r.end_datetime,
                     r.created_at,
                     r.total_price,
                     r.payment_method,
@@ -79,17 +100,16 @@ def get_user_reservations(id_user: int):
                 INNER JOIN service s ON r.id_service = s.id_service
                 INNER JOIN reservation_status rs ON r.id_reservation_status = rs.id_reservation_status
                 WHERE r.id_user = %s AND r.state = TRUE
-                ORDER BY r.scheduled_datetime DESC
+                ORDER BY r.start_datetime DESC
             """, (id_user,))
             reservations = cur.fetchall()
             cur.close()
             
             # Convertir datetime objects a strings
             for reservation in reservations:
-                if reservation['scheduled_datetime']:
-                    reservation['scheduled_datetime'] = reservation['scheduled_datetime'].strftime('%Y-%m-%d %H:%M:%S')
-                if reservation['created_at']:
-                    reservation['created_at'] = reservation['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+                for field in ['start_datetime', 'end_datetime', 'created_at']:
+                    if reservation.get(field):
+                        reservation[field] = reservation[field].strftime('%Y-%m-%d %H:%M:%S')
             
             return reservations if reservations else []
     except Exception as e:
@@ -112,7 +132,8 @@ def get_all_reservations():
                     r.id_user,
                     r.id_service,
                     r.id_reservation_status,
-                    r.scheduled_datetime,
+                    r.start_datetime,
+                    r.end_datetime,
                     r.created_at,
                     r.total_price,
                     r.payment_method,
@@ -128,17 +149,16 @@ def get_all_reservations():
                 INNER JOIN user_account ua ON r.id_user = ua.id_user
                 INNER JOIN user_profile up ON r.id_user = up.id_user
                 WHERE r.state = TRUE
-                ORDER BY r.scheduled_datetime DESC
+                ORDER BY r.start_datetime DESC
             """)
             reservations = cur.fetchall()
             cur.close()
             
             # Convertir datetime objects a strings
             for reservation in reservations:
-                if reservation['scheduled_datetime']:
-                    reservation['scheduled_datetime'] = reservation['scheduled_datetime'].strftime('%Y-%m-%d %H:%M:%S')
-                if reservation['created_at']:
-                    reservation['created_at'] = reservation['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+                for field in ['start_datetime', 'end_datetime', 'created_at']:
+                    if reservation.get(field):
+                        reservation[field] = reservation[field].strftime('%Y-%m-%d %H:%M:%S')
             
             return reservations if reservations else []
     except Exception as e:
@@ -164,7 +184,8 @@ def get_reservation_by_id(id_reservation: int):
                     r.id_user,
                     r.id_service,
                     r.id_reservation_status,
-                    r.scheduled_datetime,
+                    r.start_datetime,
+                    r.end_datetime,
                     r.created_at,
                     r.total_price,
                     r.payment_method,
@@ -181,8 +202,10 @@ def get_reservation_by_id(id_reservation: int):
             
             # Convertir datetime objects a strings
             if result:
-                if result['scheduled_datetime']:
-                    result['scheduled_datetime'] = result['scheduled_datetime'].strftime('%Y-%m-%d %H:%M:%S')
+                if result['start_datetime']:
+                    result['start_datetime'] = result['start_datetime'].strftime('%Y-%m-%d %H:%M:%S')
+                if result['end_datetime']:
+                    result['end_datetime'] = result['end_datetime'].strftime('%Y-%m-%d %H:%M:%S')
                 if result['created_at']:
                     result['created_at'] = result['created_at'].strftime('%Y-%m-%d %H:%M:%S')
             
